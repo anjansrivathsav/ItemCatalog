@@ -312,10 +312,6 @@ def deleteitem(catalog_id,item_id):
         return render_template('publicsports.html')
 
 
-# sportsapp-178918
-#  322645762308-p73apt6s4tl8au36fdbi8qiecnapgud7.apps.googleusercontent.com
-#  uBV_rtNtSGuSCOKE-I2nqXe3
-
 
 
 
