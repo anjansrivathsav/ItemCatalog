@@ -1,0 +1,19 @@
+{% extends "main.html" %}
+{% block content %}
+
+<h1> Edit Item</h1>
+<div class="row">
+		<div class="col-md-6 col-md-offset-1 padding-top">
+			<form action="#" method = "post">
+				<div class="form-group">
+				<input type ="text" class="form-control" maxlength="100" name="name" placeholder="name">
+				<div class="padding-bottom"></div>
+                <input type ="text" class="form-control" maxlength="100" name="description" placeholder="description">
+				<div class="padding-bottom"></div>
+				<button type="submit" class="btn btn-default" id="submit" type="submit">
+				<span  aria-hidden="true"></span>Create</button>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

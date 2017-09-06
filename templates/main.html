@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		<!--<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">-->
+		 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	     <link rel=stylesheet  href="static\style.css">
+	</head>
+	<body>
+
+	    <nav class="navbar navbar-inverse">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="/">Sports</a>
+
+		  </div>
+			<ul class="nav navbar-nav">
+				{%if 'username' not in session %}
+			<li><a href="{{url_for('showLogin')}}">Click Here to Login </a></li>
+			{% else %}
+			<li><a href="{{url_for('gdisconnect')}}">Logout</a></li>
+			{% endif %}
+
+         </ul>
+
+		</nav>
+
+		<div class="container" class="background">
+			{% block content %}
+			{% endblock %}
+		</div>
+	</body>
+</html>
