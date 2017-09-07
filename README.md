@@ -9,6 +9,18 @@ and the database sqlalchmey
 * httplib
  * oauth2client
  
+ the functionalities that you can't edit the items that are added by other users only you can edit only the content added by you
+ 
  ## step2
- run this in your localmachine at port 8000
+ download the code or clone the repository 
+ 
+ go to the directory in the command line where the project is been downloaded
+ 
+ and run the command python project.py
+ 
+ open the browser and run on localhost:8000
+ 
+ 
+ 
+ 
  
