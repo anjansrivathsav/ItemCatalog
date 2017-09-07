@@ -121,9 +121,9 @@ def gconnect():
     output += '<h1>Welcome, '
     output += login_session['username']
     output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    # output += '<img src="'
+    # output += login_session['picture']
+    # output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     #flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
@@ -186,61 +186,67 @@ def catalogjson():
     result = session.query(CatalogItem).all()
     return jsonify(Catalog=[i.serialize for i in result])
 
+
 @app.route('/catalog/<int:catalog_id>/json')
 def catalogitemjson(catalog_id):
-    result = session.query(CatalogItem).filter_by(id = catalog_id).all()
-    return jsonify(totalitems = [i.serialize for i in result])
+    result = session.query(CatalogItem).filter_by(id=catalog_id).all()
+    return jsonify(totalitems=[i.serialize for i in result])
 
 
 @app.route('/catalog/<int:catalog_id>/item/<int:item_id>/json')
-def Itemjson(catalog_id,item_id):
-    result = session.query(Items).filter_by(id = item_id).one()
+def Itemjson(catalog_id, item_id):
+    result = session.query(Items).filter_by(id=item_id).one()
     return jsonify(result.serialize)
+
 
 # The main page to display the catalogitems and items latestly added
 @app.route('/')
 def Catalog():
     result = session.query(Items).join(CatalogItem).order_by(desc(Items.id)).all()
     catalog = session.query(CatalogItem).all()
-    return render_template('publicsports.html',result = result,catalog = catalog )
+    return render_template('publicsports.html', result=result, catalog=catalog)
 
 
 # the function which displays the catalogs and their items
 @app.route('/catalogitem/<int:catalog_id>/items')
 def Catalogi(catalog_id):
-    result = session.query(Items).filter_by(catalog_id= catalog_id).all()
+    result = session.query(Items).filter_by(catalog_id=catalog_id).all()
     catalog = session.query(CatalogItem).all()
-    return render_template('catalogitems.html',result = result,catalog = catalog)
+    return render_template('catalogitems.html', result=result, catalog=catalog)
 
 
-#the fuction to display the the particular item
+# the fuction to display the the particular item
 @app.route('/catalogitem/<int:catalog_id>/item/<int:item_id>/')
-def Catalogdes(catalog_id,item_id):
-    result = session.query(Items).filter_by(id =item_id).one()
-    return render_template('descriptionitem.html',result = result)
+def Catalogdes(catalog_id, item_id):
+    result = session.query(Items).filter_by(id=item_id).one()
+    return render_template('descriptionitem.html', result=result)
 
-#adding the new catalog
+
+# adding the new catalog
 @app.route('/catalogitem/new', methods=['GET', 'POST'])
 def newcatalog():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newCatalog = CatalogItem(name=request.form['name'], user_id=login_session['user_id'])
+        newCatalog = CatalogItem(name=request.form['name'],
+                                 user_id=login_session['user_id'])
         session.add(newCatalog)
-        flash('new catalog %s is successfully created' %newCatalog.name)
+        flash('new catalog %s is successfully created' % newCatalog.name)
         session.commit()
         return redirect(url_for('Catalog'))
     else:
         return render_template('newCatalog.html')
 
-#editing the catalog
-@app.route('/catalogitem/<int:catalog_id>/edit' , methods=['GET','POST'])
+
+# editing the catalog
+@app.route('/catalogitem/<int:catalog_id>/edit', methods=['GET', 'POST'])
 def editcatalog(catalog_id):
-    editCatalog = session.query(CatalogItem).filter_by(id = catalog_id).one()
+    editCatalog = session.query(CatalogItem).filter_by(id=catalog_id).one()
     if 'username' not in login_session:
         return redirect('/login')
     if editCatalog.user_id != login_session['user_id']:
-        return "<script>you cant make the changes as you are not the actual creator of this</script>"
+        return "<script>you cant make the changes as you are"
+        "not the actual creator of this</script>"
     if request.method == 'POST':
         if request.form['name']:
             editCatalog.name = request.form['name']
@@ -248,6 +254,7 @@ def editcatalog(catalog_id):
             return redirect(url_for('Catalog'))
     else:
         return render_template('editcatalog.html')
+
 
 #deleting the catalog
 @app.route('/catalogitem/<int:catalog_id>/delete/' , methods=['GET','POST'])
@@ -264,13 +271,17 @@ def deletecatalog(catalog_id):
         return render_template('publicsports.html')
 
 
-#adding  a new item in a particular catalog
-@app.route('/catalogitem/<int:catalog_id>/item/new/',methods=['GET','POST'])
+
+    # adding  a new item in a particular catalog
+@app.route('/catalogitem/<int:catalog_id>/item/new/', methods=['GET', 'POST'])
 def additem(catalog_id):
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newItem = Items(name=request.form['name'], description = request.form['description'],catalog_id = catalog_id,user_id=login_session['user_id'])
+
+        newItem = Items(name=request.form['name'], description=
+        request.form['description'], catalog_id=catalog_id,
+                        user_id=login_session['user_id'])
         session.add(newItem)
         flash("added item succesfully")
         session.commit()
@@ -278,18 +289,19 @@ def additem(catalog_id):
     else:
         return render_template('additem.html')
 
-#editiing the already existing item
-@app.route('/catalogitem/<int:catalog_id>/item/<int:item_id>/edit',methods=['GET','POST'])
-def edititem(catalog_id,item_id):
+# editiing the already existing item
+@app.route('/catalogitem/<int:catalog_id>/item/<int:item_id>/edit', methods=['GET', 'POST'])
+def edititem(catalog_id, item_id):
+
     if 'username' not in login_session:
         return redirect('/login')
-    edititem = session.query(Items).filter_by(id = item_id).one()
+    edititem = session.query(Items).filter_by(id=item_id).one()
     if edititem.user_id != login_session['user_id']:
         return "<script>you can't make changes to this as you are not the original creator</script>"
     if request.method == 'POST':
         if request.form['name'] or request.form['description']:
             edititem.name = request.form['name']
-            edititem.description  = request.form['description']
+            edititem.description = request.form['description']
             session.add(edititem)
             flash("successfully edited")
             session.commit()
@@ -297,12 +309,14 @@ def edititem(catalog_id,item_id):
     else:
         return render_template('edititem.html')
 
-#deleting the item from a particular catalog
-@app.route('/catalogitem/<int:catalog_id>/item/<int:item_id>/delete',methods=['GET','POST'])
-def deleteitem(catalog_id,item_id):
+# deleting the item from a particular catalog
+
+@app.route('/catalogitem/<int:catalog_id>/item/<int:item_id>/delete',
+           methods=['GET', 'POST'])
+def deleteitem(catalog_id, item_id):
     if 'username' not in login_session:
         return redirect('/login')
-    deleteitem = session.query(Items).filter_by(id = item_id).one()
+    deleteitem = session.query(Items).filter_by(id=item_id).one()
     if deleteitem.user_id != login_session['user_id']:
         return "<script>you are not the actual owner of this item</script>"
     else:
@@ -312,10 +326,12 @@ def deleteitem(catalog_id,item_id):
         return render_template('publicsports.html')
 
 
-
+# sportsapp-178918
+# 322645762308-p73apt6s4tl8au36fdbi8qiecnapgud7.apps.googleusercontent.com
+# uBV_rtNtSGuSCOKE-I2nqXe3
 
 
 if __name__ == '__main__':
-    app.secret_key = "secret_key"
+    app.secret_key = "30anjan97"
     app.debug = True
-    app.run(host='0.0.0.0',port=8000)
+    app.run(host='0.0.0.0', port=8000)
